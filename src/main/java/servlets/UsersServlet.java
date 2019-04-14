@@ -1,5 +1,6 @@
 package servlets;
 
+import Config.Config;
 import accounts.AccountService;
 import accounts.UserProfile;
 import com.google.gson.Gson;
@@ -14,9 +15,12 @@ import java.io.IOException;
 public class UsersServlet extends HttpServlet {
 
     private final AccountService accountService;
+    private final Config config;
 
-    public UsersServlet(AccountService accountService) {
+
+    public UsersServlet(AccountService accountService, Config config) {
         this.accountService = accountService;
+        this.config = config;
     }
 
 

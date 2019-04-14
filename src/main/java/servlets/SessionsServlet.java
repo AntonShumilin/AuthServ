@@ -1,8 +1,10 @@
 package servlets;
 
+import Config.Config;
 import accounts.AccountService;
 import accounts.UserProfile;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,9 +15,11 @@ import java.io.IOException;
 
 public class SessionsServlet extends HttpServlet {
     private final AccountService accountService;
+    private final Config config;
 
-    public SessionsServlet(AccountService accountService) {
+    public SessionsServlet(AccountService accountService, Config config) {
         this.accountService = accountService;
+        this.config = config;
     }
 
 
@@ -29,11 +33,12 @@ public class SessionsServlet extends HttpServlet {
             response.setContentType("text/html;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         } else {
-            Gson gson = new Gson();
-            String json = gson.toJson(profile);
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.setPrettyPrinting().create();
+            String json = gson.toJson(config);
             response.setContentType("text/html;charset=utf-8");
             response.getWriter().println("Вход по ключу сесии");
-            response.getWriter().println("<p>json </p>");
+            response.getWriter().println("<p>Конфиг</p>");
             response.getWriter().println(json);
             response.setStatus(HttpServletResponse.SC_OK);
         }
@@ -59,10 +64,11 @@ public class SessionsServlet extends HttpServlet {
         }
 
         accountService.addSession(request.getSession().getId(), profile);
-        Gson gson = new Gson();
-        String json = gson.toJson(profile);
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setPrettyPrinting().create();
+        String json = gson.toJson(config);
         response.setContentType("text/html;charset=utf-8");
-        response.getWriter().println("<p>json </p>");
+        response.getWriter().println("<p>Конфиг</p>");
         response.getWriter().println(json);
         response.setStatus(HttpServletResponse.SC_OK);
     }

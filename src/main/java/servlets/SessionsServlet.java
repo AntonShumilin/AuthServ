@@ -15,13 +15,16 @@ import java.io.IOException;
 
 public class SessionsServlet extends HttpServlet {
     private final AccountService accountService;
-    private final Config config;
 
-    public SessionsServlet(AccountService accountService, Config config) {
+
+    public SessionsServlet(AccountService accountService) {
         this.accountService = accountService;
-        this.config = config;
+
     }
 
+    GsonBuilder builder = new GsonBuilder();
+    Gson gson = builder.setPrettyPrinting().create();
+    String json = gson.toJson(Config.getInstance());
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
@@ -33,12 +36,9 @@ public class SessionsServlet extends HttpServlet {
             response.setContentType("text/html;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         } else {
-            GsonBuilder builder = new GsonBuilder();
-            Gson gson = builder.setPrettyPrinting().create();
-            String json = gson.toJson(config);
-            response.setContentType("text/html;charset=utf-8");
-            response.getWriter().println("Вход по ключу сесии");
-            response.getWriter().println("<p>Конфиг</p>");
+
+
+            response.setContentType("application/json");
             response.getWriter().println(json);
             response.setStatus(HttpServletResponse.SC_OK);
         }
@@ -64,11 +64,9 @@ public class SessionsServlet extends HttpServlet {
         }
 
         accountService.addSession(request.getSession().getId(), profile);
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().create();
-        String json = gson.toJson(config);
-        response.setContentType("text/html;charset=utf-8");
-        response.getWriter().println("<p>Конфиг</p>");
+
+
+        response.setContentType("application/json");
         response.getWriter().println(json);
         response.setStatus(HttpServletResponse.SC_OK);
     }

@@ -15,12 +15,10 @@ import java.io.IOException;
 public class UsersServlet extends HttpServlet {
 
     private final AccountService accountService;
-    private final Config config;
 
 
-    public UsersServlet(AccountService accountService, Config config) {
+    public UsersServlet(AccountService accountService) {
         this.accountService = accountService;
-        this.config = config;
     }
 
 

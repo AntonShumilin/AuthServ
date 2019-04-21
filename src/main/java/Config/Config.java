@@ -15,6 +15,17 @@ public class Config {
     Github github = new Github();
     Telegram telegram = new Telegram();
 
+    //Singleton
+    private static Config instance;
+    private Config() {};
+    public static Config getInstance(){
+        if(instance == null){
+            instance = new Config();
+        }
+        return instance;
+    }
+
+
     class App {
         String env = "development";
         String secret = "dev-secret";

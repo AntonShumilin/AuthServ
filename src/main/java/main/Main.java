@@ -20,7 +20,7 @@ import java.io.FileReader;
 public class Main {
     public static void main(String[] args) throws Exception {
         //дефолтный конфиг
-        Config config = new Config();
+        Config config = Config.getInstance();
 
         // подготовка json builder
         GsonBuilder builder = new GsonBuilder();
@@ -29,14 +29,14 @@ public class Main {
         // читаем конфиг
         StringBuilder sb = new StringBuilder();
         String s = "";
-        try (BufferedReader br = new BufferedReader(new FileReader("config.json"));) {
+        try (BufferedReader br = new BufferedReader(new FileReader("config.json"))) {
 
             while ((s = br.readLine()) != null) {
                 sb.append(s);
             }
             config = gson.fromJson(sb.toString(), Config.class);
         } catch (Exception e){
-            System.out.println("No config file!");
+            System.out.println("No config file / Config file not valid");
         }
 
 
@@ -45,11 +45,12 @@ public class Main {
         AccountService accountService = new AccountService();
         accountService.addNewUser(new UserProfile("admin"));
         accountService.addNewUser(new UserProfile("test"));
+        accountService.addNewUser(new UserProfile("1"));
 
         // сервлеты для обработки форм
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(new UsersServlet(accountService, config)), "/reg");
-        context.addServlet(new ServletHolder(new SessionsServlet(accountService, config)), "/profile");
+        context.addServlet(new ServletHolder(new UsersServlet(accountService)), "/reg");
+        context.addServlet(new ServletHolder(new SessionsServlet(accountService)), "/profile");
 
 
         // стартуем веб сервер
